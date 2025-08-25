@@ -1,31 +1,25 @@
-import { StyleSheet } from 'react-native';
+// app/(tabs)/two.tsx
+import { useEffect } from 'react';
+import { View, Text } from 'react-native';
+import { db } from '@/services/firebase';
+import { collection, getDocs, limit, query } from 'firebase/firestore';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+export default function TwoScreen() {
+  useEffect(() => {
+    (async () => {
+      try {
+        const snap = await getDocs(query(collection(db, 'assets'), limit(1)));
+        console.log('[firebase] connected, assets sample size:', snap.size);
+      } catch (e) {
+        console.log('[firebase] error:', e);
+      }
+    })();
+  }, []);
 
-export default function TabTwoScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/two.tsx" />
+    <View style={{ flex: 1, padding: 16, justifyContent: 'center', alignItems: 'center' }}>
+      <Text style={{ fontSize: 18, fontWeight: '600' }}>Two</Text>
+      <Text>Check Metro logs for the Firestore sanity message.</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
